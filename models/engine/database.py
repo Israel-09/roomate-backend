@@ -3,6 +3,8 @@
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from models.user import User
+from models.profile import Profile
+from models.preference import Preference
 from sqlalchemy.exc import InvalidRequestError
 from sqlalchemy.orm.exc import NoResultFound
 
@@ -23,8 +25,6 @@ class DB:
         url = 'mysql+mysqlconnector://{}:{}@{}/{}'.format(MYSQL_USER, MYSQL_PWD, MYSQL_HOST, MYSQL_DB)
         print(url)
         self._engine = create_engine(url)
-        if ENV == 'test':
-            Base.metadata.drop_all(self._engine)
         Base.metadata.create_all(self._engine)
         self.__session = None
     
@@ -53,7 +53,7 @@ class DB:
         session = self._session
         user = session.query(User).filter_by(**kwargs).first()
         if user is None:
-            raise NoResultFound
+            raise NoResultFound('No result  found')
         return user
 
     def update_user(self, user_id: int, **kwargs) -> None:

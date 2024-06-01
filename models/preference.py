@@ -7,7 +7,7 @@ class Preference(BaseModel, Base):
     __tablename__ = 'preferences'
 
     id = Column(Integer, primary_key=True)
-    user_id = Column(Integer, ForeignKey('users.id'), nullable=False, unique=True)
+    user_id = Column(Integer, ForeignKey('users.id'), unique=True)
     cleanliness = Column(String(50))
     noise_tolerance = Column(String(50))
     sleep_schedule = Column(String(50))

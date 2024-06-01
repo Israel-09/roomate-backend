@@ -14,8 +14,8 @@ class User(BaseModel, Base):
     session_id = Column(String(250))
     reset_token = Column(String(250))
 
-    profile = relationship('Profile', uselist=False, backref='user')
-    preference = relationship('Preference', uselist=False, backref='user')
+    profile = relationship('Profile', uselist=False, backref='users')
+    preference = relationship('Preference', uselist=False, backref='users')
 
     def __repr__(self):
         '''string representation of user'''

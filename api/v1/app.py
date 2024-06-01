@@ -2,16 +2,18 @@
 """
 main app
 """
-from flask import Flask, request, jsonify, abort
+from flask import Flask, jsonify
 from os import getenv
 from api.v1.views import app_views
-from api.v1.auth.auth import Auth
+from flask_cors import CORS
+
 
 app = Flask(__name__)
+CORS(app)
 app.url_map.strict_slashes = False
 app.register_blueprint(app_views)
 
-auth = Auth()
+
 
 @app.errorhandler(404)
 def not_found(error):
@@ -32,19 +34,6 @@ def handle_forbidden(error) -> str:
     """
     return jsonify({"error": "Forbidden"}), 403
 
-
-@app.before_request
-def before_request():
-    """check if enpoint requires authentication"""
-    excluded_paths = ['/api/v1/status/',
-                        '/api/v1/unauthorized/', '/api/v1/forbidden/',
-                        '/api/v1/auth_session/login/']
-
-    if auth.require_auth(request.path, excluded_paths) is False:
-        current_user = auth.current_user(request)
-        if current_user is None:
-            abort(403)
-        request.current_user = current_user
             
 if __name__ == '__main__':
     HOST = getenv('API_HOST', '0.0.0.0')

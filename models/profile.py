@@ -2,7 +2,7 @@
 from sqlalchemy import Column, Integer, String, ForeignKey, DECIMAL
 from models.base_model import BaseModel, Base
 
-class Profile(BaseModel, Base):
+class Profile(Base, BaseModel):
     """user model"""
     __tablename__ = 'profiles'
 
