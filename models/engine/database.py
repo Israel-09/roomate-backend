@@ -68,6 +68,11 @@ class DB:
 
         self._session.commit()
         return None
+    
+    def all_user_preference(self):
+        """returns all the columns in the preference table"""
+        preferences = self._session.query(Preference).all()
+        return preferences
 
     def add(self, obj):
         """add a new object to the database"""

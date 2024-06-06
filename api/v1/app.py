@@ -9,11 +9,17 @@ from flask_cors import CORS
 
 
 app = Flask(__name__)
-CORS(app)
+CORS(app, supports_credentials=True)
 app.url_map.strict_slashes = False
 app.register_blueprint(app_views)
 
-
+@app.after_request
+def add_cors_headers(response):
+    response.headers['Access-Control-Allow-Origin'] = 'http://127.0.0.1:5500'
+    response.headers['Access-Control-Allow-Headers'] = 'Content-Type'
+    response.headers['Access-Control-Allow-Methods'] = 'POST, OPTIONS, GET, DELETE, PUT'
+    response.headers['Access-Control-Allow-Credentials'] = 'true'
+    return response
 
 @app.errorhandler(404)
 def not_found(error):

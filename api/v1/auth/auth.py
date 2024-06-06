@@ -66,7 +66,7 @@ class Auth():
         """
         try:
             user = self._db.find_user_by(email=email)
-            print(type(user.hashed_password))
+            print(user.hashed_password, password)
             if bcrypt.checkpw(password.encode('utf-8'), user.hashed_password.encode('utf-8')):
                 return True
         except NoResultFound:
@@ -80,6 +80,7 @@ class Auth():
         try:
             user = self._db.find_user_by(email=email)
             user.session_id = _generate_uuid()
+            self._db.save()
             return user.session_id
         except NoResultFound:
             return None
@@ -92,6 +93,16 @@ class Auth():
             return None
         try:
             user = self._db.find_user_by(session_id=session_id)
+            return user
+        except NoResultFound:
+            return None
+
+    def get_user_from_id(self, user_id: str) -> User:
+        """retrieves user using the user id"""
+        if id is None:
+            return None
+        try:
+            user = self._db.find_user_by(id=user_id)
             return user
         except NoResultFound:
             return None
@@ -114,6 +125,7 @@ class Auth():
             user = self._db.find_user_by(email=email)
             user.reset_token = _generate_uuid()
             return user.reset_token
+            self._db.save()
         except NoResultFound:
             raise ValueError("no result found")
 
@@ -124,5 +136,6 @@ class Auth():
             user.hashed_password = _hash_password(new_password)
             user.reset_token = None
             user.session_id = None
+            self._db.save()
         except NoResultFound:
             raise(ValueError)
